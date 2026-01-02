@@ -71,7 +71,7 @@ If crucial context is missing, ask 1-3 targeted questions. Otherwise, proceed wi
   /**
    * Main execution method - implements plan-delegate-integrate-verify loop
    */
-  async execute(task: string, context?: string): Promise<MasterTAResult> {
+  async execute(task: string, context?: string): Promise<SubAgentResult> {
     console.log('\n=== Master TA: Starting Task ===');
     console.log(`Task: ${task}`);
     console.log(`Course: ${this.courseState.courseName}`);
@@ -96,23 +96,44 @@ If crucial context is missing, ask 1-3 targeted questions. Otherwise, proceed wi
       const output = this.generateFinalOutput(integrated, verification);
 
       return {
+        agentType: 'MasterTA',
         success: verification.passed,
         output,
-        changeLog: this.changeLog,
-        verification,
         files: integrated.files
       };
 
     } catch (error: any) {
       console.error(`\n[ERROR] Master TA failed: ${error.message}`);
       return {
+        agentType: 'MasterTA',
         success: false,
         output: `Error: ${error.message}`,
-        changeLog: this.changeLog,
-        verification: { passed: false, issues: [error.message], warnings: [] },
-        files: []
+        files: [],
+        errors: [error.message]
       };
     }
+  }
+
+  /**
+   * Get full results with additional metadata
+   */
+  async executeWithMetadata(task: string, context?: string): Promise<MasterTAResult> {
+    const result = await this.execute(task, context);
+    const verification = await this.getLastVerification();
+    
+    return {
+      success: result.success,
+      output: result.output,
+      changeLog: this.changeLog,
+      verification,
+      files: result.files || []
+    };
+  }
+
+  private lastVerification: VerificationResult = { passed: true, issues: [], warnings: [] };
+
+  private async getLastVerification(): Promise<VerificationResult> {
+    return this.lastVerification;
   }
 
   /**
@@ -320,7 +341,10 @@ If crucial context is missing, ask 1-3 targeted questions. Otherwise, proceed wi
       warnings.forEach(warn => console.log(`  - ${warn}`));
     }
 
-    return { passed, issues, warnings };
+    // Store for later retrieval
+    this.lastVerification = { passed, issues, warnings };
+
+    return this.lastVerification;
   }
 
   /**

@@ -88,7 +88,7 @@ program
 
       // Execute task
       console.log('Starting task execution...\n');
-      const result = await masterTA.execute(options.task, options.context);
+      const result = await masterTA.executeWithMetadata(options.task, options.context);
 
       // Display results
       console.log('\n' + '='.repeat(60));

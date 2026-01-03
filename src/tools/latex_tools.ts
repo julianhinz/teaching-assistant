@@ -92,7 +92,11 @@ export class LaTeXTools {
    */
   static extractMacros(content: string): Map<string, string> {
     const macros = new Map<string, string>();
-    const newcommandRegex = /\\newcommand\{\\([^}]+)\}(?:\[(\d+)\])?\{([^}]+)\}/g;
+    // Note: This regex supports simple \newcommand definitions and escaped braces (\{, \})
+    // in the macro body, but it does not fully parse nested brace groups. Very complex
+    // macro definitions may not be extracted correctly.
+    const newcommandRegex =
+      /\\newcommand\s*\{\\([^}]+)\}(?:\s*\[(\d+)\])?\s*\{((?:[^{}]|\\{|\\})*)\}/g;
     
     let match;
     while ((match = newcommandRegex.exec(content)) !== null) {

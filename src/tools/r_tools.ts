@@ -47,11 +47,11 @@ export class RTools {
       }
 
       // Check for assignment operators
-      // Exclude named function arguments like data.frame(x = 1:10)
+      // Only flag assignments at the start of a line or after semicolon (actual variable assignments)
+      // This excludes named function arguments like data.frame(x = 1:10)
       if (codePart.includes('=') && !codePart.match(/[<>!=]=/) && !codePart.includes('==')) {
-        // Check if = appears outside of function call context
-        // Simple heuristic: if = is not preceded by ( or , with only whitespace/identifier in between
-        const assignmentPattern = /(?:^|[^(,])\s*\w+\s*=/;
+        // Pattern: assignment at line start or after semicolon
+        const assignmentPattern = /(?:^|;)\s*\w+\s*=/;
         if (assignmentPattern.test(codePart) && 
             !codePart.includes('function') && 
             !codePart.includes('for') && 

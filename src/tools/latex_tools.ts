@@ -71,9 +71,14 @@ export class LaTeXTools {
 
     // Final checks
     if (braceDepth !== 0) {
+      const absDepth = Math.abs(braceDepth);
+      const description =
+        braceDepth > 0
+          ? `${absDepth} unclosed brace${absDepth === 1 ? '' : 's'}`
+          : `${absDepth} extra closing brace${absDepth === 1 ? '' : 's'}`;
       issues.push({
         type: 'error',
-        message: `Mismatched braces: ${braceDepth > 0 ? braceDepth + ' unclosed' : Math.abs(braceDepth) + ' extra closing'}`
+        message: `Mismatched braces: ${description}`
       });
     }
 

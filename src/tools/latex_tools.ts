@@ -100,7 +100,7 @@ export class LaTeXTools {
     
     let match;
     while ((match = newcommandRegex.exec(content)) !== null) {
-      const [_, name, numArgs, definition] = match;
+      const [fullMatch, name, numArgs, definition] = match;
       macros.set(name, definition);
     }
 

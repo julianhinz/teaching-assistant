@@ -130,7 +130,7 @@ Provide the R script in a code block with filename.`;
     const fileBlockRegex = /```(?:r|R)(?::|\s+)?([^\n]+)?\n([\s\S]*?)```/g;
     
     let match;
-    let scriptIndex = 0;
+    let scriptNumber = 1;
     while ((match = fileBlockRegex.exec(response)) !== null) {
       let filename = match[1]?.trim();
       const content = match[2];
@@ -138,7 +138,7 @@ Provide the R script in a code block with filename.`;
       // Generate filename if not provided
       if (!filename || !filename.endsWith('.R')) {
         const topic = sanitizeFilename(task.substring(0, MAX_FILENAME_PREFIX_LENGTH));
-        filename = `script_${topic}_${scriptIndex + 1}.R`;
+        filename = `script_${topic}_${scriptNumber}.R`;
       }
       
       try {
@@ -161,7 +161,7 @@ Provide the R script in a code block with filename.`;
         console.error(`[RCodeTA] Failed to save ${filename}: ${error.message}`);
       }
       
-      scriptIndex++;
+      scriptNumber++;
     }
 
     return savedFiles;

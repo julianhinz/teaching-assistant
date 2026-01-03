@@ -62,7 +62,7 @@ $C(Q) = 10Q$
 
 The monopolist sets quantity where:
 \begin{equation
-MR = MC  % Missing closing brace - intentional error
+MR = MC  % Missing closing brace for equation environment - intentional error
 \end{equation}
 
 \end{frame}

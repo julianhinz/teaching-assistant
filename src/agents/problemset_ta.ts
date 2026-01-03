@@ -128,7 +128,6 @@ Format each in a LaTeX-compatible markdown code block with filename.`;
     let solutionsContent: string | null = null;
     
     let match;
-    let blockIndex = 0;
     while ((match = fileBlockRegex.exec(response)) !== null) {
       const suggestedFilename = match[1]?.trim();
       const content = match[2];
@@ -144,8 +143,6 @@ Format each in a LaTeX-compatible markdown code block with filename.`;
       } else if (isSolutions && !solutionsContent) {
         solutionsContent = content;
       }
-      
-      blockIndex++;
     }
 
     // Generate filenames

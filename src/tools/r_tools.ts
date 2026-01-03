@@ -153,6 +153,7 @@ export class RTools {
 
     // Common heavy packages that might have lighter alternatives
     const heavyPackages = ['tidyverse', 'ggplot2'];
+    // Check if any of the packages in the code match the heavy packages list
     const foundHeavy = packages.filter(p => heavyPackages.includes(p));
 
     if (foundHeavy.length > 0) {

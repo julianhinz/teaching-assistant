@@ -120,8 +120,12 @@ export function translate(text: string, targetLang: Language): string {
   for (const [en, de] of Object.entries(translations)) {
     const regex = new RegExp(`\\b${en}\\b`, 'gi');
     translated = translated.replace(regex, (match) => {
-      // Preserve case: if original is all caps, make translation all caps
-      if (match === match.toUpperCase()) {
+      // Preserve case: if original is all caps (for multi-letter words), make translation all caps
+      const isAllCaps =
+        match.length > 1 &&
+        match === match.toUpperCase() &&
+        match !== match.toLowerCase();
+      if (isAllCaps) {
         return de.toUpperCase();
       }
       // If original is title case, make translation title case

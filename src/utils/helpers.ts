@@ -142,6 +142,11 @@ export function extractLectureNumber(filePath: string): number | null {
 export function sanitizeFilename(title: string): string {
   return title
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/^_+|_+$/g, '');
+    // Replace any sequence of disallowed characters with a single underscore,
+    // but preserve existing hyphens and underscores.
+    .replace(/[^a-z0-9_-]+/g, '_')
+    // Collapse multiple underscores into a single underscore.
+    .replace(/_{2,}/g, '_')
+    // Trim leading and trailing underscores or hyphens.
+    .replace(/^[_-]+|[_-]+$/g, '');
 }

@@ -106,7 +106,7 @@ echo ""
 if command -v tree >/dev/null 2>&1; then
     tree -L 2 -I 'node_modules|dist'
 else
-    echo "(Note: 'tree' command not found; showing a simplified view with 'find'."
+    echo "(Note: 'tree' command not found; showing a simplified view with 'find'.)"
     echo "       You can usually install 'tree' via your package manager, e.g."
     echo "       'sudo apt-get install tree' or 'brew install tree'.)"
     find . -type d -not -path '*/node_modules/*' -not -path '*/dist/*' -not -path '*/.git/*' | head -20

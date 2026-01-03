@@ -11,6 +11,7 @@ import { SubAgentResult, TaskType, VerificationResult, ChangeLogEntry } from '..
 import { FileSystemTools } from '../tools/fs_tools.js';
 import { CourseState } from '../state/course_state.js';
 import { classifyTask, createChangeLogEntry, formatChangeLog } from '../utils/helpers.js';
+import { MAX_TASK_DESCRIPTION_LENGTH } from '../utils/constants.js';
 
 export interface MasterTAResult {
   success: boolean;
@@ -254,7 +255,7 @@ If crucial context is missing, ask 1-3 targeted questions. Otherwise, proceed wi
         agentName,
         'execute',
         result.files || [],
-        `Completed task: ${task.substring(0, 60)}${task.length > 60 ? '...' : ''}`
+        `Completed task: ${task.substring(0, MAX_TASK_DESCRIPTION_LENGTH)}${task.length > MAX_TASK_DESCRIPTION_LENGTH ? '...' : ''}`
       ));
     } else {
       console.error(`[${agentName}] ✗ Failed: ${result.errors?.join(', ')}`);

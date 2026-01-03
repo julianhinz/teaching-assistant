@@ -47,8 +47,15 @@ export class RTools {
       }
 
       // Check for assignment operators
+      // Exclude named function arguments like data.frame(x = 1:10)
       if (codePart.includes('=') && !codePart.match(/[<>!=]=/) && !codePart.includes('==')) {
-        if (!codePart.includes('function') && !codePart.includes('for') && !codePart.includes('if')) {
+        // Check if = appears outside of function call context
+        // Simple heuristic: if = is not preceded by ( or , with only whitespace/identifier in between
+        const assignmentPattern = /(?:^|[^(,])\s*\w+\s*=/;
+        if (assignmentPattern.test(codePart) && 
+            !codePart.includes('function') && 
+            !codePart.includes('for') && 
+            !codePart.includes('if')) {
           issues.push({
             type: 'warning',
             line: lineNum,
@@ -58,7 +65,7 @@ export class RTools {
       }
 
       // Check for common mistakes
-      if (codePart.includes('T') && codePart.match(/\bT\b/) && !codePart.includes('TRUE')) {
+      if (codePart.match(/\bT\b/)) {
         issues.push({
           type: 'warning',
           line: lineNum,
@@ -66,7 +73,7 @@ export class RTools {
         });
       }
 
-      if (codePart.includes('F') && codePart.match(/\bF\b/) && !codePart.includes('FALSE')) {
+      if (codePart.match(/\bF\b/)) {
         issues.push({
           type: 'warning',
           line: lineNum,

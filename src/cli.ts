@@ -11,6 +11,7 @@ import { MasterTA } from './agents/master.js';
 import { FileSystemTools } from './tools/fs_tools.js';
 import { CourseState } from './state/course_state.js';
 import { Language } from './types/index.js';
+import { DEFAULT_MODEL, DEFAULT_MAX_TOKENS } from './utils/constants.js';
 
 // Load environment variables
 dotenv.config();
@@ -79,8 +80,8 @@ program
       const masterTA = new MasterTA(
         {
           apiKey,
-          model: 'claude-3-5-sonnet-20241022',
-          maxTokens: 4096
+          model: DEFAULT_MODEL,
+          maxTokens: DEFAULT_MAX_TOKENS
         },
         fsTools,
         courseState

@@ -5,6 +5,7 @@
 import { BaseAgent } from './base_agent.js';
 import { SubAgentResult } from '../types/index.js';
 import { sanitizeFilename } from '../utils/helpers.js';
+import { MAX_FILENAME_PREFIX_LENGTH } from '../utils/constants.js';
 
 export class ResearchTA extends BaseAgent {
   protected getSystemPrompt(): string {
@@ -97,7 +98,7 @@ Format the response with:
     // Extract BibTeX content
     const bibtexMatch = response.match(/```(?:bibtex|bib)\n([\s\S]*?)```/);
     if (bibtexMatch) {
-      const topic = sanitizeFilename(task.substring(0, 30));
+      const topic = sanitizeFilename(task.substring(0, MAX_FILENAME_PREFIX_LENGTH));
       const bibtexFile = `research_${topic}.bib`;
       
       try {
@@ -110,7 +111,7 @@ Format the response with:
     }
 
     // Save full research summary
-    const topic = sanitizeFilename(task.substring(0, 30));
+    const topic = sanitizeFilename(task.substring(0, MAX_FILENAME_PREFIX_LENGTH));
     const summaryFile = `research_${topic}.md`;
     
     try {

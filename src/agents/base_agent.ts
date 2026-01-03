@@ -6,6 +6,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import { SubAgentResult } from '../types/index.js';
 import { FileSystemTools } from '../tools/fs_tools.js';
 import { CourseState } from '../state/course_state.js';
+import { DEFAULT_MODEL, DEFAULT_MAX_TOKENS } from '../utils/constants.js';
 
 export interface AgentConfig {
   apiKey: string;
@@ -26,8 +27,8 @@ export abstract class BaseAgent {
     courseState: CourseState
   ) {
     this.client = new Anthropic({ apiKey: config.apiKey });
-    this.model = config.model || 'claude-3-5-sonnet-20241022';
-    this.maxTokens = config.maxTokens || 4096;
+    this.model = config.model || DEFAULT_MODEL;
+    this.maxTokens = config.maxTokens || DEFAULT_MAX_TOKENS;
     this.fs = fs;
     this.courseState = courseState;
   }

@@ -6,6 +6,7 @@ import { BaseAgent } from './base_agent.js';
 import { SubAgentResult } from '../types/index.js';
 import { RTools } from '../tools/r_tools.js';
 import { sanitizeFilename } from '../utils/helpers.js';
+import { MAX_FILENAME_PREFIX_LENGTH } from '../utils/constants.js';
 
 export class RCodeTA extends BaseAgent {
   protected getSystemPrompt(): string {
@@ -136,7 +137,7 @@ Provide the R script in a code block with filename.`;
       
       // Generate filename if not provided
       if (!filename || !filename.endsWith('.R')) {
-        const topic = sanitizeFilename(task.substring(0, 30));
+        const topic = sanitizeFilename(task.substring(0, MAX_FILENAME_PREFIX_LENGTH));
         filename = `script_${topic}_${scriptIndex + 1}.R`;
       }
       

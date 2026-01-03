@@ -119,7 +119,18 @@ export function translate(text: string, targetLang: Language): string {
   let translated = text;
   for (const [en, de] of Object.entries(translations)) {
     const regex = new RegExp(`\\b${en}\\b`, 'gi');
-    translated = translated.replace(regex, de);
+    translated = translated.replace(regex, (match) => {
+      // Preserve case: if original is all caps, make translation all caps
+      if (match === match.toUpperCase()) {
+        return de.toUpperCase();
+      }
+      // If original is title case, make translation title case
+      if (match[0] === match[0].toUpperCase()) {
+        return de.charAt(0).toUpperCase() + de.slice(1);
+      }
+      // Otherwise use lowercase
+      return de.toLowerCase();
+    });
   }
 
   return translated;

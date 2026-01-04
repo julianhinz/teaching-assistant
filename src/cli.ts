@@ -11,7 +11,19 @@ import { MasterTA } from './agents/master.js';
 import { FileSystemTools } from './tools/fs_tools.js';
 import { CourseState } from './state/course_state.js';
 import { Language } from './types/index.js';
-import { DEFAULT_MODEL, DEFAULT_MAX_TOKENS, OPENROUTER_BASE_URL } from './utils/constants.js';
+import { DEFAULT_MODEL, DEFAULT_MAX_TOKENS, OPENROUTER_BASE_URL, OPENROUTER_PROVIDERS } from './utils/constants.js';
+
+/**
+ * Check if a model name is an OpenRouter model by checking for known provider prefixes.
+ * OpenRouter models use the format 'provider/model-name' where provider is a known provider.
+ */
+function isOpenRouterModel(model: string): boolean {
+  const slashIndex = model.indexOf('/');
+  if (slashIndex === -1) return false;
+  
+  const provider = model.substring(0, slashIndex);
+  return OPENROUTER_PROVIDERS.includes(provider);
+}
 
 // Load environment variables
 dotenv.config();
@@ -44,7 +56,7 @@ program
 
       // Determine API configuration based on model
       const model = options.model;
-      const isOpenRouter = model.includes('/');
+      const isOpenRouter = isOpenRouterModel(model);
       
       let apiKey: string | undefined;
       let baseURL: string | undefined;

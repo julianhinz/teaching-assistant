@@ -11,7 +11,7 @@ import { MasterTA } from './agents/master.js';
 import { FileSystemTools } from './tools/fs_tools.js';
 import { CourseState } from './state/course_state.js';
 import { Language } from './types/index.js';
-import { DEFAULT_MODEL, DEFAULT_MAX_TOKENS } from './utils/constants.js';
+import { DEFAULT_MODEL, DEFAULT_MAX_TOKENS, OPENROUTER_BASE_URL } from './utils/constants.js';
 
 // Load environment variables
 dotenv.config();
@@ -32,6 +32,7 @@ program
   .option('--path <directory>', 'Materials directory path', './course_materials')
   .option('--context <text>', 'Additional context for the task')
   .option('--state <file>', 'Path to course state JSON file')
+  .option('--model <model>', 'Model to use (e.g., anthropic/claude-4.5-opus for OpenRouter)', DEFAULT_MODEL)
   .action(async (options) => {
     try {
       // Validate language
@@ -41,12 +42,29 @@ program
         process.exit(1);
       }
 
-      // Validate API key
-      const apiKey = process.env.ANTHROPIC_API_KEY;
-      if (!apiKey) {
-        console.error('Error: ANTHROPIC_API_KEY environment variable not set');
-        console.error('Please create a .env file with your API key or export it');
-        process.exit(1);
+      // Determine API configuration based on model
+      const model = options.model;
+      const isOpenRouter = model.includes('/');
+      
+      let apiKey: string | undefined;
+      let baseURL: string | undefined;
+      
+      if (isOpenRouter) {
+        apiKey = process.env.OPENROUTER_API_KEY;
+        baseURL = OPENROUTER_BASE_URL;
+        if (!apiKey) {
+          console.error('Error: OPENROUTER_API_KEY environment variable not set');
+          console.error('OpenRouter API key is required for models like "anthropic/claude-4.5-opus"');
+          console.error('Please create a .env file with your API key or export it');
+          process.exit(1);
+        }
+      } else {
+        apiKey = process.env.ANTHROPIC_API_KEY;
+        if (!apiKey) {
+          console.error('Error: ANTHROPIC_API_KEY environment variable not set');
+          console.error('Please create a .env file with your API key or export it');
+          process.exit(1);
+        }
       }
 
       // Setup filesystem tools
@@ -80,8 +98,9 @@ program
       const masterTA = new MasterTA(
         {
           apiKey,
-          model: DEFAULT_MODEL,
-          maxTokens: DEFAULT_MAX_TOKENS
+          model,
+          maxTokens: DEFAULT_MAX_TOKENS,
+          baseURL
         },
         fsTools,
         courseState

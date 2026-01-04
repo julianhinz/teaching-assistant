@@ -12,6 +12,7 @@ export interface AgentConfig {
   apiKey: string;
   model?: string;
   maxTokens?: number;
+  baseURL?: string;
 }
 
 export abstract class BaseAgent {
@@ -26,7 +27,10 @@ export abstract class BaseAgent {
     fs: FileSystemTools,
     courseState: CourseState
   ) {
-    this.client = new Anthropic({ apiKey: config.apiKey });
+    this.client = new Anthropic({ 
+      apiKey: config.apiKey,
+      baseURL: config.baseURL
+    });
     this.model = config.model || DEFAULT_MODEL;
     this.maxTokens = config.maxTokens || DEFAULT_MAX_TOKENS;
     this.fs = fs;

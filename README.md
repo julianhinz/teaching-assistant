@@ -87,8 +87,11 @@ node dist/cli.js run \
   --lang en|de \
   --path ./course_materials \
   [--context "additional context"] \
-  [--state ./course_state.json]
+  [--state ./course_state.json] \
+  [--model "anthropic/claude-4.5-opus"]
 ```
+
+**Model Option:** The `--model` option allows you to specify which model to use. By default, it uses `anthropic/claude-4.5-opus` via OpenRouter. For OpenRouter models (format: `provider/model-name`), set the `OPENROUTER_API_KEY` environment variable. For direct Anthropic API models (format: `claude-*`), set the `ANTHROPIC_API_KEY` environment variable.
 
 ## Examples
 

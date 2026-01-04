@@ -91,7 +91,7 @@ node dist/cli.js run \
   [--model "anthropic/claude-4.5-opus"]
 ```
 
-**Model Option:** The `--model` option allows you to specify which model to use. By default, it uses `anthropic/claude-4.5-opus` via OpenRouter. For OpenRouter models (format: `provider/model-name`), set the `OPENROUTER_API_KEY` environment variable. For direct Anthropic API models (format: `claude-*`), set the `ANTHROPIC_API_KEY` environment variable.
+**Model Option:** The `--model` option allows you to specify which model to use. By default, it uses `anthropic/claude-4.5-opus` via OpenRouter. For OpenRouter models (any model name containing a `/`, e.g. `provider/model-name`), set the `OPENROUTER_API_KEY` environment variable. For direct Anthropic API models (model names without a `/`, e.g. `claude-*`), set the `ANTHROPIC_API_KEY` environment variable.
 
 ## Examples
 
